@@ -1,0 +1,11 @@
+[package]
+name = "aoc2024"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] } # For command-line argument parsing
+anyhow = "1.0" # For better error handling
+
+[dev-dependencies]
+rstest = "0.23.0" # For parameterized tests
