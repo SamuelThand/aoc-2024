@@ -1,20 +1,29 @@
 use crate::util;
 
-pub fn run(part: u8) {
-    let input = util::read_input("input/day01.txt");
-    match part {
-        1 => println!("{}", part1(&input)),
-        2 => println!("{}", part2(&input)),
-        _ => eprintln!("Invalid part: {}", part),
-    }
+fn part1(input: &str) -> i32 {
+    let (mut list1, mut list2): (Vec<i32>, Vec<i32>) = create_vectors_from_col1_col2(input);
+
+    list1.sort();
+    list2.sort();
+
+    list1
+        .iter()
+        .zip(list2.iter())
+        .map(|(a, b)| (a - b).abs())
+        .sum()
 }
 
-fn part1(input: &str) -> i32 {
-    let mut sum: i32 = 0;
+fn part2(input: &str) -> i32 {
+    let (list1, list2): (Vec<i32>, Vec<i32>) = create_vectors_from_col1_col2(input);
 
-    // Läs in i två arrayer och sortera dom asc, räkna ut skillnaden mellan respektive index och summera
+    list1
+        .iter()
+        .map(|num| num * list2.iter().filter(|&num2| num == num2).count() as i32)
+        .sum()
+}
 
-    let (list1, list2): (Vec<i32>, Vec<i32>) = input
+fn create_vectors_from_col1_col2(input: &str) -> (Vec<i32>, Vec<i32>) {
+    input
         .lines()
         .map(|list| {
             let mut nums = list
@@ -22,27 +31,16 @@ fn part1(input: &str) -> i32 {
                 .map(|num| num.parse::<i32>().unwrap());
             (nums.next().unwrap(), nums.next().unwrap())
         })
-        .unzip();
-
-    println!("{:?}", list1);
-    println!("{:?}", list2);
-
-    //släng in en sort-operation, och en sum operation?
-
-    5
-
-    // Location IDs
-    // Pair the smallest num in the left list with the smallest in the right
-    // Then the second.. and so on
-    // Measure diff between numbers in the pairs
-    // What is the total diff?
-
-    // Vad är skillnaden mellan &str, String, str?
+        .unzip()
 }
 
-fn part2(input: &str) -> i32 {
-    println!("Running part 2: {}", input);
-    5
+pub fn run(part: u8) {
+    let input = util::read_input("input/day01.txt");
+    match part {
+        1 => println!("{}", part1(&input)),
+        2 => println!("{}", part2(&input)),
+        _ => eprintln!("Invalid part: {}", part),
+    }
 }
 
 #[cfg(test)]
@@ -54,5 +52,11 @@ mod test {
     fn test_part1() {
         let input: String = util::read_input("input/day01-test.txt");
         assert_eq!(part1(&input), 11)
+    }
+
+    #[test]
+    fn test_part2() {
+        let input: String = util::read_input("input/day01-test.txt");
+        assert_eq!(part2(&input), 31)
     }
 }
